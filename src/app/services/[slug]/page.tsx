@@ -349,9 +349,16 @@ export default async function ServiceDetailPage({
         <div className="grid gap-8 lg:grid-cols-[minmax(0,15rem)_minmax(0,1fr)] lg:gap-8">
           <div>
             <SectionLabel>{page.offer.label}</SectionLabel>
+            {/*
+              whitespace-pre-line so a heading can force its own break. Only
+              Roblox's uses it today ("End-to-End Roblox / Development") — the
+              mockup breaks after "Roblox", and balancing put "Roblox" down
+              with "Development" instead. A heading with no newline in it is
+              unaffected and still balances.
+            */}
             <h2
               id="offer-heading"
-              className="mt-2 max-w-[22ch] text-balance text-h3 text-text"
+              className="mt-2 max-w-[22ch] whitespace-pre-line text-balance text-h3 text-text"
             >
               {page.offer.heading}
             </h2>
@@ -462,15 +469,33 @@ export default async function ServiceDetailPage({
               style={{ background: CARD_FILL }}
             >
               {/*
-                Icon beside the heading, as the mockup draws it. It was stacked
-                for one pass because at the 12rem this column then had, sharing
-                the line left the heading 128px and broke it over four lines.
-                The column is 14rem now and the heading is set at text-small,
-                which is what buys the two lines the mockup gets — the mockup's
-                own panel is ~250px against this 224px, so the type had to give
-                somewhere for the arrangement to survive.
+                TWO ARRANGEMENTS, CHOSEN BY THE CONTENT. Automation's mockup
+                puts the icon beside the heading and left-aligns the whole
+                panel, above a three-point checklist. Roblox's stacks the icon
+                over a centred heading and centres the button, and has no
+                checklist under it.
+
+                Keyed off `points.length` rather than off the slug for the
+                reason `denseCards` above is: this is a property of what the
+                panel contains, not of which service it belongs to. A panel
+                with a list has a left edge that the list establishes and the
+                heading should share; a panel without one is three centred
+                things in a column, and left-aligning them leaves the short
+                second line hanging. A future service inherits whichever
+                arrangement its own content asks for, with no flag to set.
+
+                On the left-aligned branch: the icon shares the heading's line
+                rather than sitting above it, which was tried and abandoned —
+                at the 14rem this column gets, stacking left the heading room
+                for four lines of two words each.
               */}
-              <div className="flex items-start gap-2.5">
+              <div
+                className={
+                  page.panel.points.length
+                    ? "flex items-start gap-2.5"
+                    : "flex flex-col items-center gap-2 text-center"
+                }
+              >
                 <LineIcon
                   name={page.panel.icon}
                   className="h-6 w-6 shrink-0 text-accent"
@@ -482,7 +507,9 @@ export default async function ServiceDetailPage({
 
               <Link
                 href={`/contact?topic=${service.slug}`}
-                className="group mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-small font-semibold text-bg transition-all duration-200 hover:bg-accent-hover hover:shadow-[0_0_24px_var(--color-accent-dim)]"
+                className={`group mt-3.5 inline-flex items-center justify-center gap-1.5 rounded-full bg-accent px-3 py-1.5 text-small font-semibold text-bg transition-all duration-200 hover:bg-accent-hover hover:shadow-[0_0_24px_var(--color-accent-dim)] ${
+                  page.panel.points.length ? "" : "self-center"
+                }`}
               >
                 Contact Me
                 <ArrowUpRightIcon className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />

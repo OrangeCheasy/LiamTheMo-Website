@@ -63,9 +63,18 @@ function TreeSilhouette({
     convention, lights the edge opposite the offset direction. */
 const BODY_FILL: React.CSSProperties = {
   background: "var(--color-surface-2)",
-  borderColor: "var(--color-border)",
-  boxShadow:
-    "inset 0.5em 0 0.9em -0.5em color-mix(in srgb, var(--color-accent) 55%, transparent)",
+  borderColor: "color-mix(in srgb, var(--color-accent) 30%, var(--color-border))",
+  boxShadow: [
+    // The rim itself. Tight and bright, so the edge reads as a lit contour
+    // rather than a general warming of the whole shape.
+    "inset 0.55em 0 0.7em -0.4em color-mix(in srgb, var(--color-accent) 90%, transparent)",
+    // A wider, weaker second pass behind it — light falling off across the
+    // body instead of stopping dead at the rim.
+    "inset 1.6em 0 1.8em -1.2em color-mix(in srgb, var(--color-accent) 45%, transparent)",
+    // Spill onto the scene, which is what separates the figure from the trees
+    // behind it. Without this the silhouette sat flat against the sky.
+    "0 0 1.6em color-mix(in srgb, var(--color-accent) 18%, transparent)",
+  ].join(", "),
 };
 
 export default function RobloxHeroArt({
@@ -130,8 +139,25 @@ export default function RobloxHeroArt({
       />
 
       {/* The character: head, one spike of hair, torso, one raised arm —
-          standing right of the archway, the mockup's own placement. */}
-      <div className="absolute bottom-0 right-[10%] flex w-[26%] flex-col items-center">
+          standing right of the archway, the mockup's own placement.
+
+          THE HEIGHT IS LOAD-BEARING, not a tuning value. Every part below is
+          sized in percentages of this box, and a percentage height resolves
+          against an ancestor with a definite one. Without `height` here the
+          wrapper was auto — sized by its content — so the head's `h-[24%]`
+          and the torso's `h-[48%]` had nothing to resolve against, collapsed
+          to zero, and the character rendered as nothing at all. The scene
+          shipped as an empty arch and two trees. Do not remove it, and do not
+          replace it with a Tailwind `h-` class either: `height` and the parts'
+          own percentages have to stay readable as one set of proportions.
+
+          justify-end pins the stack to the bottom edge so the figure stands on
+          the ground line rather than floating above it — the parts add up to
+          72% of this box, and flex-start would have left that 28% underneath. */}
+      <div
+        className="absolute bottom-0 right-[10%] flex w-[30%] flex-col items-center justify-end"
+        style={{ height: "88%" }}
+      >
         {/* Arm, behind the torso in source order so it reads as the far
             side, angled up toward the archway's light. */}
         <div

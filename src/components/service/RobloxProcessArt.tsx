@@ -1,45 +1,35 @@
-import Logo from "@/components/Logo";
-import { warmGlowImage } from "@/lib/glow";
+import Image from "next/image";
 
 /*
-  The artwork beside the Roblox page's process steps (owner mockup,
-  2026-08-22): the same tree-lined, portal-lit scene as RobloxHeroArt, cropped
-  to the archway and carrying the site's own "lm" mark glowing inside it
-  rather than a character.
+  The Roblox service page's process artwork: the voxel scene from the owner's
+  mockup — ruins, a lit archway, and the "lm" mark glowing on stone at dusk.
 
-  WHY IT EARNS ITS PLACE — same reasoning as AutomationProcessArt: the step
-  row next to it says what the process is; this is the payoff, a finished
-  place with the maker's own mark lit up inside it, standing in for "a
-  polished, playable game" the way AutomationProcessArt's finished run stands
-  in for "a documented system."
+  SHIPPED AS A PICTURE, UNLIKE EVERY OTHER DRAWING IN THIS FOLDER (owner call,
+  2026-08-23). What stood here before was DOM — an arch, two blob trees and a
+  glow, built from tokens for the reason the sibling components still give: a
+  photoreal render is not reproducible in CSS, and faking one badly costs more
+  than dropping it. That reasoning holds right up until the owner supplies the
+  render itself, which is what happened here. There is nothing left to
+  approximate, so the approximation goes.
 
-  SHARES ITS SHAPES WITH RobloxHeroArt (tree silhouette, archway) rather than
-  duplicating the scene as a second drawing — it is the same place, seen
-  closer up, so it is built the same way rather than redrawn.
+  This does NOT reopen the question for AutomationHeroArt, AutomationProcessArt
+  or RobloxHeroArt. Those three are still DOM because no render exists for
+  them, not because DOM was preferred on principle.
 
-  SAME RULES AS EVERY OTHER SERVICE-PAGE ARTWORK: DOM rather than an image,
-  aria-hidden because it is set dressing, no animation.
+  WHAT IT COSTS (§12). The source was a 1672x941 PNG at 1.76 MB. Resampled to
+  1280x720 and encoded WebP q80 it is 67 KB — the widest this ever renders is
+  about 304px (the lg process column), so 1280 covers a 2x display with room
+  spare and anything larger would be bytes no screen can show. The PNG is not
+  referenced by anything; it is kept in the repo only as the editable source.
+
+  BELOW THE FOLD, so no `priority` and no preload: next/image lazy-loads by
+  default and that is correct here. The LCP element on this page is the hero
+  heading, which is text.
+
+  DECORATIVE, hence alt="". The "My Process" heading and the three steps
+  beside it carry the meaning; a screen reader announcing "voxel ruins at
+  dusk" would be reading out set dressing.
 */
-
-function TreeSilhouette({ style }: { style: React.CSSProperties }) {
-  return (
-    <div className="absolute bottom-0" style={style}>
-      <div className="relative h-full w-full">
-        <div
-          className="absolute bottom-0 left-1/2 h-[45%] w-[18%] -translate-x-1/2 rounded-[0.15em]"
-          style={{ background: "var(--color-border)" }}
-        />
-        <div
-          className="absolute bottom-[30%] left-0 h-[70%] w-full rounded-full border"
-          style={{
-            background: "var(--color-surface-2)",
-            borderColor: "var(--color-border)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 export default function RobloxProcessArt({
   className = "",
@@ -49,52 +39,39 @@ export default function RobloxProcessArt({
   return (
     <div
       aria-hidden="true"
-      className={`relative aspect-[4/3] w-full overflow-hidden rounded-2xl border border-border ${className}`}
+      /*
+        16/9, the render's own ratio, so the image is never cropped. The DOM
+        version this replaced was aspect-[4/3] — a shape chosen to give the
+        drawn arch room rather than measured off anything, and the mockup's own
+        art region is nearer 1.9:1 than 1.33:1, so this moves toward the mockup
+        rather than away from it.
+
+        No border. Every other panel on the page is a card and wears the
+        hairline; this is artwork, and the mockup lets it sit on the background
+        with soft corners and no stroke. The warm ambient below is what seats
+        it instead — §9.4's "depth from contrast and glow, not drop shadows",
+        with the one black shadow kept tight enough to read as contact.
+      */
+      className={`relative aspect-[16/9] w-full overflow-hidden rounded-2xl ${className}`}
       style={{
-        backgroundImage: [
-          warmGlowImage({ size: [65, 80], peak: 28, at: "50% 88%" }),
-          "linear-gradient(180deg, color-mix(in srgb, var(--color-service-roblox) 12%, var(--color-bg)) 0%, var(--color-bg) 55%, var(--color-surface-2) 100%)",
+        boxShadow: [
+          "0 2px 10px rgba(0,0,0,0.5)",
+          "0 0 40px color-mix(in srgb, var(--color-accent) 10%, transparent)",
         ].join(", "),
       }}
     >
-      <div
-        className="absolute inset-x-0 bottom-0 h-[18%]"
-        style={{
-          background:
-            "linear-gradient(180deg, transparent, var(--color-surface-2))",
-        }}
+      <Image
+        src="/services/roblox/my-process.webp"
+        alt=""
+        fill
+        /*
+          Matches the process row's own columns (see ServiceDetailPage): a
+          17rem track at xl, roughly half the row at lg where the grid drops to
+          two columns, and the full container width once it stacks.
+        */
+        sizes="(min-width: 1280px) 17rem, (min-width: 1024px) 50vw, 100vw"
+        className="object-cover"
       />
-
-      <TreeSilhouette
-        style={{ left: "4%", width: "16%", height: "40%", opacity: 0.5 }}
-      />
-      <TreeSilhouette
-        style={{ right: "5%", width: "18%", height: "46%", opacity: 0.6 }}
-      />
-
-      {/* The archway, centred, with the "lm" mark glowing inside it. */}
-      <div
-        className="absolute bottom-[10%] left-1/2 flex w-[42%] -translate-x-1/2 items-center justify-center rounded-t-[999px] border border-border"
-        style={{
-          height: "62%",
-          background: `${warmGlowImage({ size: [80, 100], peak: 60, at: "50% 100%" })}, var(--color-surface-2)`,
-          boxShadow:
-            "0 0 2.5em color-mix(in srgb, var(--color-accent) 35%, transparent)",
-        }}
-      >
-        {/* The glow the mockup lights this mark with — a filter on a
-            wrapping element, since it has to trace the mark's own path
-            rather than fill a box the way warmGlowImage() does. */}
-        <div
-          className="h-[34%]"
-          style={{
-            filter:
-              "drop-shadow(0 0 0.5em color-mix(in srgb, var(--color-accent) 80%, transparent))",
-          }}
-        >
-          <Logo className="h-full w-auto text-accent" />
-        </div>
-      </div>
     </div>
   );
 }

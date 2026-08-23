@@ -428,14 +428,19 @@ export const services: readonly Service[] = [
       ],
       blurb:
         "Custom Roblox experiences, systems, and assets built with clean code and creative design.",
+      // The mockup sets this button's icon as the Roblox mark, not the
+      // generic `window` the other services' secondary CTA carries.
       secondaryCta: {
         href: "/portfolio",
         label: "View My Work",
-        icon: "window",
+        icon: "roblox",
       },
       offer: {
         label: "What I Offer",
-        heading: "End-to-End Roblox Development",
+        // Broken by hand after "Roblox" — the mockup sets it on two lines and
+        // text-balance alone put "Roblox" down with "Development". Rendered
+        // via whitespace-pre-line in the page template.
+        heading: "End-to-End Roblox\nDevelopment",
         body: "From game design and systems to custom assets and optimization, I build polished, engaging, and replayable Roblox experiences.",
         cards: [
           {

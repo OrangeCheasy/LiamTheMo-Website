@@ -39,7 +39,8 @@ export type LineIconKey =
   | "cube"
   | "gamepad"
   | "users"
-  | "trophy";
+  | "trophy"
+  | "roblox";
 
 /**
  * One run of hero-heading text. `accent: true` paints it `--color-accent`.

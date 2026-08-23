@@ -142,6 +142,30 @@ const GLYPHS: Record<LineIconKey, React.ReactNode> = {
     </>
   ),
 
+  /*
+    The Roblox mark: a tilted rounded square with a tilted square cut out of
+    it. Added for the Roblox service page's "View My Work" button, which the
+    owner's mockup sets with this rather than the generic `window` every other
+    secondary CTA uses.
+
+    DRAWN IN THIS SET'S OWN IDIOM — two stroked paths at the shared weight,
+    not a traced copy of the brand asset. It is a recognisable reference at
+    16px beside a button label, which is all the mockup asks of it, and it
+    inherits currentColor and the stroke weight like every other glyph here
+    instead of importing a foreign shape with its own fill rules.
+
+    The rotation is baked into the coordinates rather than applied as a
+    transform, so the glyph composes with `className` the same way the rest
+    do — a transform here would be silently overridden by any caller that
+    sets one.
+  */
+  roblox: (
+    <>
+      <path d="M8.1 2.9 21.1 6.4 17.6 19.4 4.6 15.9z" />
+      <path d="M10.5 9.2 14.8 10.4 13.6 14.7 9.3 13.5z" />
+    </>
+  ),
+
   monitor: (
     <>
       <rect x="2.6" y="4" width="18.8" height="12.4" rx="2" />
